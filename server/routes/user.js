@@ -3,8 +3,9 @@ const app = express();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const _ = require('underscore');
+const { verifyToken, verifyAdminRole } = require('../middlewares/auth');
 
-app.get('/users', (req, res) => {
+app.get('/users', verifyToken, (req, res) => {
     let limit = req.query.limit || 5;
     limit = Number(limit);
     let from = req.query.from || 0;
@@ -37,7 +38,7 @@ app.get('/user/:id', (req, res) => {
     res.json('search by id');
 })
 
-app.post('/user', (req, res) => {
+app.post('/user', [verifyToken, verifyAdminRole], (req, res) => {
     let body = req.body;
     let user = new User({
         name: body.name,
@@ -59,7 +60,7 @@ app.post('/user', (req, res) => {
     });
 });
 
-app.put('/user/:id', (req, res) => {
+app.put('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
     let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'state']);
     let id = req.params.id;
     User.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, userDB) => {
@@ -76,7 +77,7 @@ app.put('/user/:id', (req, res) => {
     });
 });
 
-app.delete('/user/:id', (req, res) => {
+app.delete('/user/:id', [verifyToken, verifyAdminRole], (req, res) => {
     let id = req.params.id;
     let changeState = {
         state: false
