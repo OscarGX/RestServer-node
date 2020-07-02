@@ -16,3 +16,6 @@ process.env.TOKEN_EXPIRES = 60 * 60 * 24 * 30;
 // Token key
 
 process.env.TOKEN_KEY = process.env.TOKEN_KEY_PROD || 'token-key-desarrollo';
+
+// Google Auth
+process.env.CLIENT_ID_GOOGLE = process.env.CLIENT_ID_GOOGLE || '282135740556-gfctbv1hmhghv8cds0pp6kej03a57gv3.apps.googleusercontent.com';
